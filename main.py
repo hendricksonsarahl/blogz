@@ -69,7 +69,11 @@ def index():
 # Show all blogs 
     blogs = Blog.query.all()
     return render_template('blogs.html',title="Build-a-Blog!", 
-        blogs=blogs)
+        blogs=blogs, id=request.args.get('id'))
+    if request.method == 'GET':
+        id=request.args.get('id')
+        return render_template('post.html')
+
 
 
 # only run app if it is called, otherwise ignore
