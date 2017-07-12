@@ -34,9 +34,9 @@ def blog():
     blog_id = request.args.get('id')
 
     if blog_id:
-        blogs = Blog.query.filter_by(id=id).all()
-        selected_post = Post.query.filter_by(id=blog_id).first()
-        return render_template("blog.html", title=selected_post.title, blogs=blogs)
+        blogs = Blog.query.filter_by(id=blog_id).all()
+        selected_post = Blog.query.filter_by(id=blog_id).first()
+        return render_template("blogs.html", title=selected_post.title, blogs=blogs)
     
 # If no specific blog selected, show all blogs
     blogs = Blog.query.all()
