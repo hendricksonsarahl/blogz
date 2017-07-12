@@ -13,7 +13,6 @@ app.secret_key = 'U\xee\xe2F\xd2\x03\xa8\x9d+\xe3\xfb5gz\xea'
 db = SQLAlchemy(app)
 
 class Blog(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120))
     content = db.Column(db.String(500))
@@ -22,23 +21,28 @@ class Blog(db.Model):
         self.title = title
         self.content = content
 
+# Index page redirects to /blog
+@app.route("/")
+def index():
+    return redirect("/blog")
 
-@app.route('/login', methods=['POST', 'GET'])
-def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        user = User.query.filter_by(email=email).first()
-        session['email'] = email
-        if user and user.password == password:
-            flash("Login successful", category='message')
-            return redirect('/')
-        else:
-            # Error message for failed login
-            flash("Error: Email/Password combination not found, please check entries and try again", category='error')
+# Main page shows all blog posts
+@app.route('/blog', methods=['POST', 'GET'])
+def blog():
+ 
+#check for query parameters
+    blog_id = request.args.get('id')
 
+    if blog_id:
+        blogs = Blog.query.filter_by(id=id).all()
+        selected_post = Post.query.filter_by(id=blog_id).first()
+        return render_template("blog.html", title=selected_post.title, blogs=blogs)
+    
+# If no specific blog selected, show all blogs
+    blogs = Blog.query.all()
+    return render_template('blogs.html',title="Build-a-Blog!", 
+        blogs=blogs)
 
-    return render_template('login.html')
 
 @app.route('/newpost', methods=['POST', 'GET'])
 def newpost():
@@ -61,18 +65,6 @@ def newpost():
             return redirect('/blog')
 
     return render_template('newpost.html')
-
-
-@app.route('/blog', methods=['POST', 'GET'])
-def index():
-
-# Show all blogs 
-    blogs = Blog.query.all()
-    return render_template('blogs.html',title="Build-a-Blog!", 
-        blogs=blogs, id=request.args.get('id'))
-    if request.method == 'GET':
-        id=request.args.get('id')
-        return render_template('post.html')
 
 
 
