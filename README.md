@@ -1,1 +1,1 @@
-#Web app using HTML/CSS/Python/Flask/Jinja2/MySQL which allows users to sign in to build and view blog posts
+#Web app using HTML/CSS/Python/Flask/Jinja2/MySQL which allows users to build and view blog posts

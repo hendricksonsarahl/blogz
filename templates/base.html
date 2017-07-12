@@ -1,29 +1,26 @@
 <!doctype html>
 <html>
     <head>
-        <style>
-            .center {
-                text-align: center;
-            }
-            .error {
-                color: red;
-            }
-
-            .message {
-                color: teal;
-            }
-
-
-        </style>
-        <div class="center">
-            <title>{{title}}</title>
-        </div>
-            <div class="center">
-                <a href="./blog">Blog Homepage</a>    <a href="./newpost">Create a blog entry!</a>
-            </div>
+        <link rel="stylesheet" type="text/css" href="static/style.css" />
     </head>
-<body>
-
+    <body>
+        <div>
+            <div>
+                <a href="./blog">HOME</a>
+            </div>
+            <div>
+                <a href="./newpost">POST NEW BLOG</a>
+            </div>
+            <div>
+                <title><h1>{{title}}</h1></title>
+            </div>
+            <div>
+                <a  href="https://twitter.com/thesxesarah" target="_b"></a><br>
+                    By <a href="https://twitter.com/thesxesarah" target="_b">Sarah Hendrickson</a> on July 12, 2017
+            </div>
+        </div>
+    </div>
+    <section>
     {% with messages = get_flashed_messages(with_categories=True) %}
 
         {% for category,message in messages %}
@@ -33,7 +30,9 @@
     {% endwith %}
 
     {% block content %}
+    
+    
     {% endblock %}
-
+    </section>
 </body>
 </html>
