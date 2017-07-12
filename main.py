@@ -45,8 +45,9 @@ def newpost():
 
     # Adding a new blog
     if request.method == 'POST':
-        blog_title = request.form['blogs']
-        new_blog = Blog(blog_title, content)
+        title = request.form['title']
+        content = request.form['content']
+        new_blog = Blog(title, content)
         db.session.add(new_blog)
         db.session.commit()
         flash("New blog successfully created!", category='message')
@@ -57,26 +58,11 @@ def newpost():
 
 @app.route('/blog', methods=['POST', 'GET'])
 def index():
-    #if request.method == 'POST':
-       # title = request.form['title']
-        #content = request.form['content']
+
 # Show all blogs 
     blogs = Blog.query.all()
     return render_template('blogs.html',title="Build-a-Blog!", 
         blogs=blogs)
-
-
-#@app.route('/delete-task', methods=['POST'])
-#def delete_task():
-
-# Removing tasks from list (marking them as 'Done!')
-    #task_id = int(request.form['task-id'])
-    #task = Task.query.get(task_id)
-    #task.completed = True
-    #db.session.add(task)
-    #db.session.commit()
-    
-    #return redirect('/')
 
 
 # only run app if it is called, otherwise ignore
