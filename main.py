@@ -12,29 +12,15 @@ app.secret_key = 'U\xee\xe2F\xd2\x03\xa8\x9d+\xe3\xfb5gz\xea'
 
 db = SQLAlchemy(app)
 
-class Task(db.Model):
+class Blog(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120))
-    completed = db.Column(db.Boolean)
-    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    title = db.Column(db.String(120))
+    content = db.Column(db.String(500))
 
-    def __init__(self, name, owner):
-        self.name = name
-        self.completed = False
-        self.owner = owner
-
-class User(db.Model):
-
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True)
-    password = db.Column(db.String(120))
-    tasks = db.relationship('Task', backref='owner')
-
-    def __init__(self, email, password):
-        self.email = email
-        self.password = password
-
+    def __init__(self, title, content):
+        self.title = title
+        self.content = content
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -54,69 +40,43 @@ def login():
 
     return render_template('login.html')
 
-@app.route('/register', methods=['POST', 'GET'])
-def register():
+@app.route('/newpost', methods=['POST', 'GET'])
+def newpost():
+
+    # Adding a new blog
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        verify = request.form['verify']
-        session['email'] = email
-
-        # TODO Validate user data
-
-        existing_user = User.query.filter_by(email=email).first()
-        if not existing_user:
-            new_user = User(email, password)
-            db.session.add(new_user)
-            db.session.commit()
-            flash("Registration successful", category='message')
-            return redirect('/')
-        else:
-            flash("Login successful", category='message')
-    
-    return render_template('register.html')
-
-@app.before_request
-def require_login():
-    allowed_routes = ['login', 'register']
-    if request.endpoint not in allowed_routes and 'email' not in session:
-        return redirect('/login')
-
-@app.route('/logout')
-def logout():
-    del session['email']
-    flash("Logout successful", category='message')
-    return redirect('/')
-
-@app.route('/', methods=['POST', 'GET'])
-def index():
-
-    owner = User.query.filter_by(email=session['email']).first()
-# Adding tasks to list
-    if request.method == 'POST':
-        task_name = request.form['task']
-        owner = User.query.filter_by(email=session['email']).first()
-        new_task = Task(task_name, owner)
-        db.session.add(new_task)
+        blog_title = request.form['blogs']
+        new_blog = Blog(blog_title, content)
+        db.session.add(new_blog)
         db.session.commit()
+        flash("New blog successfully created!", category='message')
+        return redirect('/blog')
 
-# Show all tasks
-    tasks = Task.query.filter_by(completed=False,owner=owner).all()
-    completed_tasks = Task.query.filter_by(completed=True,owner=owner).all()
-    return render_template('todos.html',title="Get It Done!", 
-        tasks=tasks, completed_tasks=completed_tasks)
+    return render_template('newpost.html')
 
-@app.route('/delete-task', methods=['POST'])
-def delete_task():
+
+@app.route('/blog', methods=['POST', 'GET'])
+def index():
+    #if request.method == 'POST':
+       # title = request.form['title']
+        #content = request.form['content']
+# Show all blogs 
+    blogs = Blog.query.all()
+    return render_template('blogs.html',title="Build-a-Blog!", 
+        blogs=blogs)
+
+
+#@app.route('/delete-task', methods=['POST'])
+#def delete_task():
 
 # Removing tasks from list (marking them as 'Done!')
-    task_id = int(request.form['task-id'])
-    task = Task.query.get(task_id)
-    task.completed = True
-    db.session.add(task)
-    db.session.commit()
+    #task_id = int(request.form['task-id'])
+    #task = Task.query.get(task_id)
+    #task.completed = True
+    #db.session.add(task)
+    #db.session.commit()
     
-    return redirect('/')
+    #return redirect('/')
 
 
 # only run app if it is called, otherwise ignore
