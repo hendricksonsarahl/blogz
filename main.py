@@ -61,8 +61,9 @@ def newpost():
             new_blog = Blog(title, content)
             db.session.add(new_blog)
             db.session.commit()
+            return redirect("/blog?id=" + str(new_blog.id))
             flash("New blog successfully created!", category='message')
-            return redirect('/blog')
+            
 
     return render_template('newpost.html')
 
