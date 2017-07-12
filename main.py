@@ -47,11 +47,18 @@ def newpost():
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
-        new_blog = Blog(title, content)
-        db.session.add(new_blog)
-        db.session.commit()
-        flash("New blog successfully created!", category='message')
-        return redirect('/blog')
+        if len(title) == 0:
+            flash("Error: Please enter a title for your blog!", category='error')
+            return redirect('/newpost')
+        if len(content) == 0:
+            flash("Error: Please create content for your blog!", category='error')
+            return redirect('/newpost')
+        else:
+            new_blog = Blog(title, content)
+            db.session.add(new_blog)
+            db.session.commit()
+            flash("New blog successfully created!", category='message')
+            return redirect('/blog')
 
     return render_template('newpost.html')
 
