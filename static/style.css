@@ -32,6 +32,12 @@ h2 {
   font-style: italic;
 }
 
+h4 {
+  font-weight: lighter;
+  text-align: center;
+  color: sienna;
+}
+
 p {
   text-align: center;
   font-size: 120%;
@@ -40,7 +46,7 @@ p {
 .background { 
   background: url(https://c1.staticflickr.com/6/5154/14185447737_0aba637f46_b.jpg) no-repeat; 
   background-position: center top;
-  background-size: 1080px auto;
+  background-size: cover;
   padding: 100px 90px 150px 90px;
 }
 
@@ -105,4 +111,9 @@ p {
   padding-right: 0.75em;
   text-align: center;
   white-space: nowrap;
+}
+
+textarea {
+  display:block;
+  margin:1em 0;
 }
