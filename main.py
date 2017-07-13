@@ -65,7 +65,7 @@ def newpost():
             flash("New blog successfully created!", category='message')
             
 
-    return render_template('newpost.html')
+    return render_template('newpost.html', title="Create a new blog post!")
 
 
 
