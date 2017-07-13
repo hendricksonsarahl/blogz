@@ -3,22 +3,23 @@
         <link rel="stylesheet" type="text/css" href="static/style.css" />
     </head>
 {% block content %}
-<h1>ADD A BLOG ENTRY</h1>
 <form action="/newpost" method="post">
-    <table>
+    <table class="prettyTable">
         <tr>
-            <td><label for="title">CREATE BLOG TITLE:</label></td>
+            <td><label for="title">Create a blog title:</label></td>
             <td>
-                <input name="title" type="text" value="{{ title }}">
+                <input name="title" type="text">
             </td>
         </tr>
         <tr>
-            <td><label for="content">ADD BLOG CONTENT:</label></td>
+            <td><label for="content">Blog away:</label></td>
             <td>
-                <textarea name="content" cols="40" rows="5"></textarea>
+                <textarea name="content" cols="70" rows="7"></textarea>
             </td>
         </tr>
     </table>
-    <input type="submit" value="Add Entry!">
+    <div id="wrapper">
+        <input type="submit" value="Add Entry!">
+    </div>
 </form>
 {% endblock %}

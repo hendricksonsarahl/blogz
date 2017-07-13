@@ -4,22 +4,19 @@
         <link rel="stylesheet" type="text/css" href="static/style.css" />
     </head>
     <body>
-        <div>
-            <div>
-                <a href="./blog">HOME</a>
-            </div>
-            <div>
-                <a href="./newpost">POST NEW BLOG</a>
-            </div>
-            <div>
-                <title><h1>{{title}}</h1></title>
-            </div>
-            <div>
-                <a  href="https://twitter.com/thesxesarah" target="_b"></a><br>
-                    By <a href="https://twitter.com/thesxesarah" target="_b">Sarah Hendrickson</a> on July 12, 2017
-            </div>
+        <div class="background">
+            <div id="overimg">
+                <div class="button">
+                    <a href="./blog">HOME</a>
+                </div>
+                <div class="button">
+                    <a href="./newpost">POST NEW BLOG</a>
+                </div>
+                <div>
+                    <h2>{{title}}</h2>
+                </div>
+            </div> 
         </div>
-    </div>
     <section>
     {% with messages = get_flashed_messages(with_categories=True) %}
 
@@ -34,5 +31,11 @@
     
     {% endblock %}
     </section>
+    <footer>
+        <div>
+            <h4>
+                Made with love by <a href="https://twitter.com/thesxesarah" target="_b">Sarah Hendrickson</a> on July 12, 2017</h4>
+        </div>
+    </footer>
 </body>
 </html>
