@@ -1,5 +1,7 @@
 from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import desc
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -16,10 +18,15 @@ class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120))
     content = db.Column(db.String(500))
+    pub_date = db.Column(db.DateTime)
 
-    def __init__(self, title, content):
+    def __init__(self, title, content, pub_date=None):
         self.title = title
         self.content = content
+        if pub_date is None:
+            pub_date = datetime.utcnow()
+        self.pub_date = pub_date
+
 
 # Index page redirects to /blog
 @app.route("/")
@@ -39,7 +46,8 @@ def blog():
         return render_template("blogs.html", title=selected_post.title, blogs=blogs)
     
 # If no specific blog selected, show all blogs
-    blogs = Blog.query.all()
+
+    blogs = Blog.query.order_by(desc(Blog.pub_date)).all()
     return render_template('blogs.html',title="Build-a-Blog!", 
         blogs=blogs)
 
@@ -51,6 +59,7 @@ def newpost():
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
+        
         if len(title) == 0:
             flash("Error: Please enter a title for your blog!", category='error')
             return redirect('/newpost')
