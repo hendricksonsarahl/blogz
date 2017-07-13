@@ -5,11 +5,6 @@
 
 }
 
-.message {
-    color: mediumslateblue;
-
-}
-
 .prettyTable{
   color: #00d1b2;
   font-size: 140%;
@@ -22,14 +17,14 @@ a {
   transition: none 86ms ease-out;
 }
 
+a:hover {
+  color: palevioletred
+}
+
 #wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-a:hover {
-  color: palevioletred
 }
 
 h2 {
@@ -59,9 +54,19 @@ p {
   background: rgba(34,34,34,0.75);
 }
 
-#overimg h2, #overimg h5, #overimg h5 a { text-align: center; color: #fefefe; font-weight: normal;}
-#overimg h2 { margin-bottom: 50px }
-#overimg h5 { margin-top: 70px }
+#overimg h2, #overimg h5, #overimg h5 a { 
+  text-align: center; 
+  color: #fefefe; 
+  font-weight: normal;
+}
+
+#overimg h2 { 
+  margin-bottom: 50px;
+
+}
+#overimg h5 { margin-top: 70px;
+
+}
 
 .button {
   -moz-appearance: none;
@@ -104,8 +109,4 @@ p {
   padding-right: 0.75em;
   text-align: center;
   white-space: nowrap;
-}
-
-.background #overimg .righty {
-  margin-left: 10px;
 }
