@@ -7,7 +7,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:launchcode@localhost:8889/build-a-blog'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:launchcode@localhost:8889/blogz'
 app.config['SQLALCHEMY_ECHO'] = True
 app.secret_key = 'U\xee\xe2F\xd2\x03\xa8\x9d+\xe3\xfb5gz\xea'
 
@@ -75,7 +75,7 @@ def newpost():
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
-        owner = User.query.filter_by(email=session['email']).first()
+        owner = User.query.filter_by(username=session['username']).first()
         
         if len(title) == 0:
             flash("Error: Please enter a title for your blog!", category='error')
@@ -93,7 +93,26 @@ def newpost():
 
     return render_template('newpost.html', title="Create a new blog post!")
 
+@app.route('/signup', methods=['POST', 'GET'])
+def signup():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        verify = request.form['verify']
+        session['username'] = username
 
+
+        existing_user = User.query.filter_by(username=username).first()
+        if not existing_user:
+            new_user = User(username, password)
+            db.session.add(new_user)
+            db.session.commit()
+            flash("Thanks, you are now signed up!", category='message')
+            return redirect('/')
+        else:
+            flash("Login successful!", category='message')
+    
+    return render_template('signup.html')
 
 # only run app if it is called, otherwise ignore
 if __name__ == '__main__':
