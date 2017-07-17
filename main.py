@@ -24,7 +24,7 @@ class Blog(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     pub_date = db.Column(db.DateTime)
 
-    def __init__(self, title, content, pub_date=None):
+    def __init__(self, title, content, owner, pub_date=None):
         self.title = title
         self.content = content
         self.owner = owner
@@ -112,7 +112,7 @@ def signup():
         else:
             flash("Login successful!", category='message')
     
-    return render_template('signup.html')
+    return render_template('signup.html', title="Signup to start building your own blog!")
 
 # only run app if it is called, otherwise ignore
 if __name__ == '__main__':
