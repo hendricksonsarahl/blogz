@@ -21,15 +21,27 @@ class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120))
     content = db.Column(db.String(500))
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     pub_date = db.Column(db.DateTime)
 
     def __init__(self, title, content, pub_date=None):
         self.title = title
         self.content = content
+        self.owner = owner
         if pub_date is None:
             pub_date = datetime.utcnow()
         self.pub_date = pub_date
 
+class User(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(12), unique=True)
+    password = db.Column(db.String(25))
+    blogs = db.relationship('Blog', backref='owner')
+
+    def __init__(self, email, password):
+        self.email = email
+        self.password = password
 
 # Index page redirects to /blog
 @app.route("/")
@@ -63,6 +75,7 @@ def newpost():
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
+        owner = User.query.filter_by(email=session['email']).first()
         
         if len(title) == 0:
             flash("Error: Please enter a title for your blog!", category='error')
@@ -71,7 +84,7 @@ def newpost():
             flash("Error: Please create content for your blog!", category='error')
             return redirect('/newpost')
         else:
-            new_blog = Blog(title, content)
+            new_blog = Blog(title, content, owner)
             db.session.add(new_blog)
             db.session.commit()
             return redirect("/blog?id=" + str(new_blog.id))
