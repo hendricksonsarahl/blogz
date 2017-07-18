@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:launchcode@localhost:8889/blogz'
 app.config['SQLALCHEMY_ECHO'] = True
-app.secret_key = 'U\xee\xe2F\xd2\x03\xa8\x9d+\xe3\xfb5gz\xea'
+app.secret_key = 'dafa027a46710270f5ab170a2dde79da4da52482fd43bd10'
 
 # Note: the connection string after :// contains the following info:
 # user:password@server:portNumber/databaseName
@@ -39,14 +39,43 @@ class User(db.Model):
     password = db.Column(db.String(25))
     blogs = db.relationship('Blog', backref='owner')
 
-    def __init__(self, email, password):
-        self.email = email
+    def __init__(self, username, password):
+        self.username = username
         self.password = password
 
 # Index page redirects to /blog
 @app.route("/")
 def index():
     return redirect("/blog")
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = User.query.filter_by(username=username).first()
+        session['username'] = username
+        if user and user.password == password:
+            flash("Login successful", category='message')
+            return redirect('/')
+        else:
+# Error message for failed login
+            flash("Error: Username/Password combination not found, please check entries and try again", category='error')
+
+    return render_template('login.html', title="Login to start blogging!")
+
+@app.before_request
+def require_login():
+    allowed_routes = ['login', 'signup']
+    if request.endpoint not in allowed_routes and 'username' not in session:
+        return redirect('/login')
+
+@app.route('/logout')
+def logout():
+    del session['username']
+    flash("Logout successful", category='message')
+    return redirect('/login')
+
 
 # Main page shows all blog posts
 @app.route('/blog', methods=['POST', 'GET'])
@@ -100,17 +129,24 @@ def signup():
         password = request.form['password']
         verify = request.form['verify']
         session['username'] = username
+# username and password user validation
 
+        if len(username) == 0:
+            flash("Error: please create a username between 1 and 12 characters", category='error')
+        elif len(password) == 0:
+            flash("Error: please create a password", category='error')
 
-        existing_user = User.query.filter_by(username=username).first()
-        if not existing_user:
-            new_user = User(username, password)
-            db.session.add(new_user)
-            db.session.commit()
-            flash("Thanks, you are now signed up!", category='message')
-            return redirect('/')
+# check for existing user. If not, create new user
         else:
-            flash("Login successful!", category='message')
+            existing_user = User.query.filter_by(username=username).first()
+            if not existing_user:
+                new_user = User(username, password)
+                db.session.add(new_user)
+                db.session.commit()
+                flash("Thanks, you are now signed up!", category='message')
+                return redirect('/')
+            else:
+                flash("Login successful!", category='message')
     
     return render_template('signup.html', title="Signup to start building your own blog!")
 
