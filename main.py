@@ -48,35 +48,60 @@ class User(db.Model):
 def index():
     return redirect("/blog")
 
+# signup for a new user account, redirect while signed in to active session
+@app.route('/signup', methods=['POST', 'GET'])
+def signup():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        verify = request.form['verify']
+        session['username'] = username
+
+# username and password user validation
+        if len(username) == 0:
+            flash("Error: please create a username between 1 and 12 characters", category='error')
+        elif len(password) == 0:
+            flash("Error: please create a password", category='error')
+        elif password != verify:
+            flash("Error: password and verify entries do not match", category='error')
+
+# check for existing user. If not, create nsew user
+        else:
+            existing_user = User.query.filter_by(username=username).first()
+            if not existing_user:
+                new_user = User(username, password)
+                db.session.add(new_user)
+                db.session.commit()
+                flash("Thanks, you are now signed up!", category='message')
+                return redirect('/')
+            else:
+                flash("Error: an account already exists for this username, please log in or create a new account", category='error')
+    
+    return render_template('signup.html', title="Signup to start building your own blog!")
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
-        session['username'] = username
+
         if user and user.password == password:
+            session['username'] = username
             flash("Login successful", category='message')
-            return redirect('/')
-        else:
+            return redirect('/newpost')
 # Error message for failed login
             flash("Error: Username/Password combination not found, please check entries and try again", category='error')
             return redirect('/login')
 
     return render_template('login.html', title="Login to start blogging!")
 
+# requires user login session to access newpost page
 @app.before_request
 def require_login():
     allowed_routes = ['login', 'signup', 'blog', 'index']
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
-
-@app.route('/logout')
-def logout():
-    del session['username']
-    flash("Logout successful", category='message')
-    return redirect('/')
-
 
 # Main page shows all blog posts
 @app.route('/blog', methods=['POST', 'GET'])
@@ -124,33 +149,12 @@ def newpost():
 
     return render_template('newpost.html', title="Create a new blog post!")
 
-@app.route('/signup', methods=['POST', 'GET'])
-def signup():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        verify = request.form['verify']
-        session['username'] = username
-
-# username and password user validation
-        if len(username) == 0:
-            flash("Error: please create a username between 1 and 12 characters", category='error')
-        elif len(password) == 0:
-            flash("Error: please create a password", category='error')
-
-# check for existing user. If not, create new user
-        else:
-            existing_user = User.query.filter_by(username=username).first()
-            if not existing_user:
-                new_user = User(username, password)
-                db.session.add(new_user)
-                db.session.commit()
-                flash("Thanks, you are now signed up!", category='message')
-                return redirect('/')
-            else:
-                flash("Error: an account already exists for this username, please log in or create a new account", category='error')
-    
-    return render_template('signup.html', title="Signup to start building your own blog!")
+# logout / end user session
+@app.route('/logout')
+def logout():
+    del session['username']
+    flash("Logout successful", category='message')
+    return redirect('/')
 
 # only run app if it is called, otherwise ignore
 if __name__ == '__main__':
