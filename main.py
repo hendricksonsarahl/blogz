@@ -61,12 +61,13 @@ def login():
         else:
 # Error message for failed login
             flash("Error: Username/Password combination not found, please check entries and try again", category='error')
+            return redirect('/login')
 
     return render_template('login.html', title="Login to start blogging!")
 
 @app.before_request
 def require_login():
-    allowed_routes = ['login', 'signup']
+    allowed_routes = ['login', 'signup', 'blog', 'index']
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
 
@@ -74,7 +75,7 @@ def require_login():
 def logout():
     del session['username']
     flash("Logout successful", category='message')
-    return redirect('/login')
+    return redirect('/')
 
 
 # Main page shows all blog posts
@@ -100,12 +101,13 @@ def blog():
 @app.route('/newpost', methods=['POST', 'GET'])
 def newpost():
 
-    # Adding a new blog
+# Adding a new blog
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
         owner = User.query.filter_by(username=session['username']).first()
         
+# user validation to check for title and content
         if len(title) == 0:
             flash("Error: Please enter a title for your blog!", category='error')
             return redirect('/newpost')
@@ -129,8 +131,8 @@ def signup():
         password = request.form['password']
         verify = request.form['verify']
         session['username'] = username
-# username and password user validation
 
+# username and password user validation
         if len(username) == 0:
             flash("Error: please create a username between 1 and 12 characters", category='error')
         elif len(password) == 0:
@@ -146,7 +148,7 @@ def signup():
                 flash("Thanks, you are now signed up!", category='message')
                 return redirect('/')
             else:
-                flash("Login successful!", category='message')
+                flash("Error: an account already exists for this username, please log in or create a new account", category='error')
     
     return render_template('signup.html', title="Signup to start building your own blog!")
 
