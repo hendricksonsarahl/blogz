@@ -84,10 +84,10 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        session['username'] = username
         user = User.query.filter_by(username=username).first()
 
         if user and user.password == password:
-            session['username'] = username
             flash("Login successful", category='message')
             return redirect('/newpost')
 # Error message for failed login
@@ -154,7 +154,7 @@ def newpost():
 def logout():
     del session['username']
     flash("Logout successful", category='message')
-    return redirect('/')
+    return redirect('/blog')
 
 # only run app if it is called, otherwise ignore
 if __name__ == '__main__':
