@@ -43,10 +43,13 @@ class User(db.Model):
         self.username = username
         self.password = password
 
-# Index page redirects to /blog
+# Index page shows list of users
 @app.route("/")
 def index():
-    return redirect("/blog")
+    users = User.query.all()
+    return render_template('index.html',title="Blogz Authors!", 
+        users=users)
+    
 
 # signup for a new user account, redirect while signed in to active session
 @app.route('/signup', methods=['POST', 'GET'])
@@ -118,7 +121,7 @@ def blog():
 # If no specific blog selected, show all blogs
 
     blogs = Blog.query.order_by(desc(Blog.pub_date)).all()
-    return render_template('blogs.html',title="Build-a-Blog!", 
+    return render_template('blogs.html', title="Blogz!", 
         blogs=blogs)
 
 # Route to page where a user can create a new post, new data adds to db
