@@ -1,17 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-   {% if blogs|length == 0 %}
-    <p>{{ username }} has not posted anything yet!</p>
-    {% else %}
+   
+{% if blogs|length == 0 %}
+    <p>This user hasn't posted anything yet!</p>
+{% else %}
 
-        {% for blog in blogs %}
-            <h3><a href="./blog?id={{ blog.id }}">{{ blog.title }}</a></h3>
-            <h5>{{ blog.pub_date }}</h5>
-            <p>{{ blog.content }}</p>
-            <p>written by <a href="./blog?user={{ blog.owner.id }}">{{ blog.owner.username }}</a></p>
-        {% endfor %}
-    {% endif %}
+    {% for blog in blogs %}
+        <h3><a href="./blog?id={{ blog.id }}">{{ blog.title }}</a></h3>
+        <h5>{{ blog.pub_date }}</h5>
+        <p>{{ blog.content }}</p>
+        <p>written by <a href="./blog?user={{ blog.owner.id }}">{{ blog.owner.username }}</a></p>
+    {% endfor %}
+{% endif %}
         
 
 

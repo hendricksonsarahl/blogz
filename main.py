@@ -123,8 +123,10 @@ def blog():
 
     if user_id:
         blogs = Blog.query.filter_by(owner_id=user_id).order_by(Blog.pub_date.desc()).all()
-        
-        return render_template("selecteduser.html", title="{}'s Posts".format(blogs[0].owner.username), blogs=blogs)
+        if len(blogs) > 0:
+            return render_template("selecteduser.html", title="{}'s Posts".format(blogs[0].owner.username), blogs=blogs)
+        else:
+            return render_template("selecteduser.html", title="This user hasn't posted yet!", blogs=blogs)
 
 # If no dynamic selected post or selected user page, display all blog posts
 
