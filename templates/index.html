@@ -9,12 +9,11 @@
     {% if users|length == 0 %}
     <p>No blogs yet! <a href="./signup">Sign up to start blogging!</a></p>
     {% else %}
+        {% for user in users %}
+            <h3><a href="./blog?user={{ user.id }}">{{ user.username }}</a></h3>
+        {% endfor %}
 
-            {% for user in users %}
-            
-                <h3><a href="./user?id={{ user.id }}">{{ user.username }}</a></h3>
-
-            {% endfor %}
     {% endif %}
 
 {% endblock %}
+

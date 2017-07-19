@@ -118,7 +118,14 @@ def blog():
         selected_post = Blog.query.filter_by(id=blog_id).first()
         return render_template("blogs.html", title=selected_post.title, blogs=blogs)
     
-# If no specific blog selected, show all blogs
+    user_id = request.args.get('user')
+
+    if user_id:
+        blogs = Blog.query.filter_by(owner_id=user_id).order_by(Blog.pub_date.desc()).all()
+        
+        return render_template("selecteduser.html", title="{}'s Posts".format(blogs[0].owner.username), blogs=blogs)
+
+# If no dynamic selected post or selected user page, display all blog posts
 
     blogs = Blog.query.order_by(desc(Blog.pub_date)).all()
     return render_template('blogs.html', title="Blogz!", 
