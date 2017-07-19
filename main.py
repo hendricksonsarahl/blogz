@@ -93,6 +93,7 @@ def login():
         if user and user.password == password:
             flash("Login successful", category='message')
             return redirect('/newpost')
+        else:
 # Error message for failed login
             flash("Error: Username/Password combination not found, please check entries and try again", category='error')
             return redirect('/login')

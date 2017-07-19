@@ -16,6 +16,8 @@
                 {% endif %}
         <h5>{{ blog.pub_date }}</h5>
         <p>{{ blog.content }}</p>
+        <p>written by <a href="./blog?user={{ blog.owner.id }}">{{ blog.owner.username }}</a></p>
+
         <hr />
             {% endfor %}
     {% endif %}
