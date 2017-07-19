@@ -21,6 +21,10 @@ a:hover {
   color: palevioletred
 }
 
+footer, a:hover {
+  color: palevioletred
+}
+
 #wrapper {
   display: flex;
   align-items: center;
@@ -34,6 +38,7 @@ h2 {
 
 h4 {
   font-weight: lighter;
+  font-style: italic;
   text-align: center;
   color: sienna;
 }
@@ -116,4 +121,10 @@ p {
 textarea {
   display:block;
   margin:1em 0;
+}
+
+img {
+  position: center;
+  size: 50%;
+
 }
