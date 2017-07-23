@@ -2,6 +2,7 @@ from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
 from datetime import datetime
+import hashlib
 from hashutils import make_hash, check_hash
 
 # Set up the Flask app and SQLAlchemy
