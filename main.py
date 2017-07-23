@@ -2,6 +2,7 @@ from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
 from datetime import datetime
+from hashutils import make_hash, check_hash
 
 # Set up the Flask app and SQLAlchemy
 
@@ -36,12 +37,12 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(12), unique=True)
-    password = db.Column(db.String(25))
+    pw_hash = db.Column(db.String(25))
     blogs = db.relationship('Blog', backref='owner')
 
     def __init__(self, username, password):
         self.username = username
-        self.password = password
+        self.pw_hash = make_hash(password)
 
 # Index page shows list of users
 @app.route("/")
@@ -75,8 +76,9 @@ def signup():
                 new_user = User(username, password)
                 db.session.add(new_user)
                 db.session.commit()
+                session['username'] = username
                 flash("Thanks, you are now signed up!", category='message')
-                return redirect('/')
+                return redirect('/newpost')
             else:
                 flash("Error: an account already exists for this username, please log in or create a new account", category='error')
     
@@ -90,7 +92,7 @@ def login():
         session['username'] = username
         user = User.query.filter_by(username=username).first()
 
-        if user and user.password == password:
+        if user and check_hash(password, user.pw_hash):
             flash("Login successful", category='message')
             return redirect('/newpost')
         else:
