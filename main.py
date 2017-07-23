@@ -36,7 +36,7 @@ class Blog(db.Model):
 class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(12), unique=True)
+    username = db.Column(db.String(15), unique=True)
     pw_hash = db.Column(db.String(25))
     blogs = db.relationship('Blog', backref='owner')
 
@@ -63,9 +63,11 @@ def signup():
 
 # username and password user validation
         if len(username) == 0:
-            flash("Error: please create a username between 1 and 12 characters", category='error')
+            flash("Error: please create a username between 1 and 15 characters", category='error')
+        elif len(username) > 15:
+            flash("Error: Username is too long - must be between 1 and 15 characters", category='error')
         elif len(password) == 0:
-            flash("Error: please create a password", category='error')
+            flash("Error: please create a password between 1 and 25 characters", category='error')
         elif password != verify:
             flash("Error: password and verify entries do not match", category='error')
 
