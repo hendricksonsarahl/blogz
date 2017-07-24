@@ -14,5 +14,5 @@ Add a new index route where all usernames are displayed. User-specific blog page
 <li>Dynamic user pages!</li>
 Each registered user is listed as a link in '/index' page, link navigates to a dynamic page which displays all blog posts for the selected user. User's name is linked below each blog post in all views.
 <li>New and improved Pagination and Hashing!</li>
-Pagination, password hashing/salting added.
+Pagination, password hashing and salting added.
 
