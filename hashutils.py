@@ -21,5 +21,5 @@ def check_hash(password, hash):
     salt = hash.split(',')[1]
     if make_hash(password, salt) == hash:
         return True
-
-    return False
+    else:
+        return False
