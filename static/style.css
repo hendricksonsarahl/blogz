@@ -31,6 +31,12 @@ footer, a:hover {
   justify-content: center;
 }
 
+#flex-blogz {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+}
 h2 {
   font-size: 250%;
   font-style: italic;

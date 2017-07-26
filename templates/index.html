@@ -9,11 +9,12 @@
     {% if users|length == 0 %}
     <p>No blogs yet! <a href="./signup">Sign up to start blogging!</a></p>
     {% else %}
+        <div id="flex-blogz">
         {% for user in users %}
-            <div class="wrapper">
+
             <h3><a href="./blog?user={{ user.id }}">{{ user.username }}</a></h3>
-            </div>
         {% endfor %}
+        </div>
 
     {% endif %}
 
