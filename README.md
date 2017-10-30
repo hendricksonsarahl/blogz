@@ -2,7 +2,7 @@
 
 New features added since Build-A-Blog:
 <li>User accounts!</li>
-User account required to create new blogs and used to keep track of bligs by user id. Restricted website access when no user logged in.
+User account required to create new posts and used to keep track of blog posts by user id. Restricted website access when no user logged in.
 <li>Login and Signup!</li>
 Create new user accounts, login to start session, access full website with login.
 <li>Logout and navigation!</li>
